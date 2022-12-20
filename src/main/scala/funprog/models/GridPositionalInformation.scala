@@ -1,6 +1,6 @@
-package progfun.models
+package funprog.models
 
-import progfun.models.CardinalDirection.Direction
+import funprog.models.CardinalDirection.Direction
 
 class GridPositionalInformation(val position: Position, val direction: Direction) {
     override def toString: String = {

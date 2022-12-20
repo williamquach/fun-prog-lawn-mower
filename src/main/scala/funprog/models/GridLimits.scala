@@ -1,4 +1,4 @@
-package progfun.models
+package funprog.models
 
 class GridLimits(val x: Int, val y: Int) {
     override def toString: String = {

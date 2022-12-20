@@ -1,6 +1,6 @@
-package progfun.adapters
+package funprog.adapters
 
-import progfun.models.{CardinalDirection, GridLimits, GridPositionalInformation, Instruction, LawnMower, LawnMowingContext, Position}
+import funprog.models.{CardinalDirection, GridLimits, GridPositionalInformation, Instruction, LawnMower, LawnMowingContext, Position}
 
 class LawnMowerTxtConverter {
 

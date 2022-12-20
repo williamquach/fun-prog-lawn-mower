@@ -1,4 +1,4 @@
-package progfun.file_loader
+package funprog.file_loader
 
 class FileLoader {
     def loadFile(path: String): String = {

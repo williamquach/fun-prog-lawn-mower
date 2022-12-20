@@ -1,4 +1,4 @@
-package progfun.models
+package funprog.models
 
 class LawnMowingContext(val gridLimits: GridLimits, val lawnMowers: List[LawnMower]) {
     override def toString: String = {

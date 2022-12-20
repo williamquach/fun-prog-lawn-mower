@@ -1,4 +1,4 @@
-package progfun.models
+package funprog.models
 
 class Position(val x: Int, val y: Int) {
     override def toString: String = {

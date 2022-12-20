@@ -1,4 +1,4 @@
-package progfun.models
+package funprog.models
 
 object Instruction extends Enumeration {
     type Instruction = Value

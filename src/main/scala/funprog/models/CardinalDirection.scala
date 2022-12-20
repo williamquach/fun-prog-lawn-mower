@@ -1,4 +1,4 @@
-package progfun.models
+package funprog.models
 
 object CardinalDirection extends Enumeration {
     type Direction = Value
