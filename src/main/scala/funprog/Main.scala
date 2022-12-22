@@ -3,6 +3,7 @@ package funprog
 import com.typesafe.config.{Config, ConfigFactory}
 import funprog.adapters.LawnMowerTxtConverter
 import funprog.file_loader.FileLoader
+import funprog.lawn_mower.LawnMowerMover
 import funprog.output.FileType
 
 object Main extends App {
@@ -33,9 +34,13 @@ object Main extends App {
     println("Lawn mowing context :")
     println(lawnMowingContext)
 
-    // TODO : Call the logic to move lawn mowers in the grid
+    println("========= FILE RESULT ===========")
+    private val lawnMowers = new LawnMowerMover
+    private val movedLawnMowers = lawnMowers.moveLawnMowers(lawnMowingContext.lawnMowers, lawnMowingContext)
+    println(lawnMowers.gridPositionalInformationListToString(movedLawnMowers))
+    println("====================")
 
-    // TODO : Call the file writer to write final result
+    //TODO : Call the file writer to write final result
     println(s"Output file path : $outputFilePath")
 
     println("====================")
