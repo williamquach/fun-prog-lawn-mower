@@ -8,7 +8,7 @@ import scala.util.{Failure, Success, Try}
 /**
  * Adapter converting a text file to a [[LawnMowingContext]].
  */
-class LawnMowerTxtConverter {
+class LawnMowerTxtAdapter extends LawnMowerAdapter {
     def parseFileToDomain(parsedFile: String): Try[LawnMowingContext] = {
         if (parsedFile.isEmpty) {
             Failure(DonneesIncorectesException("Le fichier est vide."))

@@ -1,7 +1,7 @@
 package funprog
 
 import com.typesafe.config.{Config, ConfigFactory}
-import funprog.adapters.LawnMowerTxtConverter
+import funprog.adapters.{LawnMowerAdapter, LawnMowerTxtAdapter}
 import funprog.file_loader.FileLoader
 import funprog.lawn_mower.LawnMowerMover
 import funprog.output.FileType
@@ -29,15 +29,14 @@ object Main extends App {
     println("====================")
 
     // Parsing text file to LawnMowingContext
-    private val lawnMowerJSONAdapter = new LawnMowerTxtConverter()
-    private val lawnMowingContext = lawnMowerJSONAdapter.parseFileToDomain(fileContent)
+    private val lawnMowerAdapter: LawnMowerAdapter = new LawnMowerTxtAdapter()
+    private val lawnMowingContext = lawnMowerAdapter.parseFileToDomain(fileContent)
 
     // Use Success and Failure from lawnMowingContext to handle errors
     lawnMowingContext match {
         case Failure(exception) =>
             println("> Nous n'avons pas réussi à parser le fichier.")
             println("> Pour la raison suivante : \n- " + exception.getMessage)
-            System.exit(1)
 
         case Success(lawnMowingContext) =>
             println("> Nous avons réussi à parser le fichier.")
