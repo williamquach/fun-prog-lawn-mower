@@ -6,8 +6,10 @@ import funprog.file_loader.FileLoader
 import funprog.lawn_mower.LawnMowerMover
 import funprog.output.FileType
 
+import scala.util.{Failure, Success}
+
 object Main extends App {
-    println("Beginning of the program...")
+    println("> Début du programme.")
     println("====================")
 
     // File path through config file
@@ -15,34 +17,46 @@ object Main extends App {
     private val inputFilePath: String = conf.getString("application.input-file")
 
     // Ask user for output file type
-    println("> In which type of file do you want to output your lawn mowers information ?")
+    println("> Quel type de de sortie souhaitez-vous pour extraire les informations des tondeuses ?")
     private val userWantOutputFileType = "json" // StdIn.readLine()
     private val outputFileType = FileType.withName(userWantOutputFileType)
-
     private val outputFilePath: String = conf.getString(s"application.output-${outputFileType.toString}-file")
 
-    // Load file at ./../../resources/lawn-mower/example_1.json
+    println("====================")
     private val fileLoader = new FileLoader()
     private val fileContent = fileLoader.loadFile(inputFilePath)
-    println(s"File content:\n$fileContent")
-
+    println(s"> Contenu de votre fichier :\n$fileContent")
     println("====================")
 
     // Parsing text file to LawnMowingContext
     private val lawnMowerJSONAdapter = new LawnMowerTxtConverter()
-    private val lawnMowingContext = lawnMowerJSONAdapter.convert(fileContent)
-    println("Lawn mowing context :")
-    println(lawnMowingContext)
+    private val lawnMowingContext = lawnMowerJSONAdapter.parseFileToDomain(fileContent)
 
-    println("========= FILE RESULT ===========")
-    private val lawnMowers = new LawnMowerMover
-    private val movedLawnMowers = lawnMowers.moveLawnMowers(lawnMowingContext.lawnMowers, lawnMowingContext)
-    println(lawnMowers.gridPositionalInformationListToString(movedLawnMowers))
-    println("====================")
+    // Use Success and Failure from lawnMowingContext to handle errors
+    lawnMowingContext match {
+        case Failure(exception) =>
+            println("> Nous n'avons pas réussi à parser le fichier.")
+            println("> Pour la raison suivante : \n- " + exception.getMessage)
+            System.exit(1)
 
-    //TODO : Call the file writer to write final result
-    println(s"Output file path : $outputFilePath")
+        case Success(lawnMowingContext) =>
+            println("> Nous avons réussi à parser le fichier.")
+            println("> Voici le contexte de(s) tondeuse(s) :")
+            println(lawnMowingContext)
+            println("====================")
 
-    println("====================")
-    println("End of the program.")
+            val lawnMowers = new LawnMowerMover
+            val movedLawnMowers = lawnMowers.moveLawnMowers(lawnMowingContext.lawnMowers, lawnMowingContext)
+            println("> Voici le contexte de(s) tondeuse(s) après mouvement(s) :")
+            println(lawnMowers.gridPositionalInformationListToString(movedLawnMowers))
+            println("====================")
+
+            //TODO : Call the file writer to write final result
+
+            println("> Les informations des tondeuses ont bien été extraites.")
+            println(s"> Chemin du fichier de sortie : $outputFilePath")
+
+            println("====================")
+            println("> Fin du programme.")
+    }
 }
