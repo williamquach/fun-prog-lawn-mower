@@ -1,6 +1,7 @@
-package funprog.models
+package funprog.models.lawn_mower
 
-import funprog.models.Instruction.Instruction
+import funprog.models.lawn_mower.movable.Instruction.Instruction
+import funprog.models.lawn_mower.position.GridPositionalInformation
 
 class LawnMower(val gridPositionalInformation: GridPositionalInformation, val instructions: List[Instruction]) {
     override def toString: String = {

@@ -1,6 +1,6 @@
-package funprog.models
+package funprog.models.lawn_mower.position
 
-import funprog.models.CardinalDirection.Direction
+import funprog.models.lawn_mower.position.CardinalDirection.Direction
 
 class GridPositionalInformation(val position: Position, val direction: Direction) {
     override def toString: String = {

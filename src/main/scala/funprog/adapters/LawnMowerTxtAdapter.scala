@@ -1,7 +1,10 @@
 package funprog.adapters
 
 import funprog.exceptions.DonneesIncorectesException
-import funprog.models._
+import funprog.models.lawn_mower.grid.GridLimits
+import funprog.models.lawn_mower.movable.Instruction
+import funprog.models.lawn_mower.position.{CardinalDirection, GridPositionalInformation, Position}
+import funprog.models.lawn_mower.{LawnMower, LawnMowingContext}
 
 import scala.util.{Failure, Success, Try}
 

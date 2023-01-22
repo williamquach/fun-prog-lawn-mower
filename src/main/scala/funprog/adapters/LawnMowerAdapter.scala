@@ -1,6 +1,6 @@
 package funprog.adapters
 
-import funprog.models._
+import funprog.models.lawn_mower.LawnMowingContext
 
 import scala.util.Try
 

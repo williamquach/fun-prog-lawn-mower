@@ -1,4 +1,6 @@
-package funprog.models
+package funprog.models.lawn_mower
+
+import funprog.models.lawn_mower.grid.GridLimits
 
 class LawnMowingContext(val gridLimits: GridLimits, val lawnMowers: List[LawnMower]) {
     override def toString: String = {

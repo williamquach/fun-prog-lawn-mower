@@ -2,7 +2,8 @@ package funprog.lawn_mower.adapters
 
 import funprog.adapters.{LawnMowerAdapter, LawnMowerTxtAdapter}
 import funprog.exceptions.DonneesIncorectesException
-import funprog.models._
+import funprog.models.lawn_mower.movable.Instruction
+import funprog.models.lawn_mower.position.{CardinalDirection, GridPositionalInformation, Position}
 import org.scalatest.funsuite.AnyFunSuite
 
 import scala.util.Failure
