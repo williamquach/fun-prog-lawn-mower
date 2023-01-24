@@ -3,7 +3,7 @@ package funprog.lawn_mower
 import funprog.models.lawn_mower.grid.GridLimits
 import funprog.models.lawn_mower.movable.{FinalLawnMowersHandler, Instruction, MovableLawnMower}
 import funprog.models.lawn_mower.position.{CardinalDirection, GridPositionalInformation, Position}
-import funprog.models.lawn_mower.{LawnMower, LawnMowingContext}
+import funprog.models.lawn_mower.{FinalLawnMower, LawnMower, LawnMowingContext}
 import org.scalatest.funsuite.AnyFunSuite
 
 class FinalMovableLawnMowersHandlerSpec extends AnyFunSuite {
@@ -26,7 +26,12 @@ class FinalMovableLawnMowersHandlerSpec extends AnyFunSuite {
                     new GridPositionalInformation(new Position(3, 3), CardinalDirection.E),
                     List(Instruction.A, Instruction.D, Instruction.D, Instruction.A, Instruction.G))))
         val lawnMowerMover = new FinalLawnMowersHandler()
-        assert(lawnMowerMover.gridPositionalInformationListToString(
-            lawnMowerMover.moveLawnMowers(lawnMowingContext.lawnMowers, lawnMowingContext)) == "0 4 N\n3 3 S\n")
+        assert(lawnMowerMover.moveLawnMowers(lawnMowingContext.lawnMowers, lawnMowingContext).toString == List(
+            new FinalLawnMower(new GridPositionalInformation(new Position(1, 2), CardinalDirection.N),
+                List(Instruction.A, Instruction.G, Instruction.A, Instruction.D, Instruction.A),
+                new GridPositionalInformation(new Position(0, 4), CardinalDirection.N)),
+            new FinalLawnMower(new GridPositionalInformation(new Position(3, 3), CardinalDirection.E),
+                List(Instruction.A, Instruction.D, Instruction.D, Instruction.A, Instruction.G),
+                new GridPositionalInformation(new Position(3, 3), CardinalDirection.S))).toString)
     }
 }
