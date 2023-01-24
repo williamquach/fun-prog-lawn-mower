@@ -2,9 +2,13 @@ package funprog.models.lawn_mower.movable
 
 import funprog.models.lawn_mower.movable.Instruction.Instruction
 import funprog.models.lawn_mower.position.GridPositionalInformation
-import funprog.models.lawn_mower.{LawnMower, LawnMowingContext}
+import funprog.models.lawn_mower.{FinalLawnMower, FinalLawnMowingContext, LawnMower, LawnMowingContext}
 
 class FinalLawnMowersHandler {
+    def createFinalLawnMower(start: GridPositionalInformation, instructions: List[Instruction], end: GridPositionalInformation): FinalLawnMower = {
+        new FinalLawnMower(start, instructions, end)
+    }
+
     def moveLawnMower(instructions: List[Instruction], lawnMower: MovableLawnMower): GridPositionalInformation = instructions match {
         case hd :: tl =>
             val newLawnMower = lawnMower.move(hd.toString)
@@ -12,17 +16,15 @@ class FinalLawnMowersHandler {
         case _ => lawnMower.lawnMowerToGridPositionalInformation(lawnMower)
     }
 
-    // TODO : Make this method return a LawnMowingContext with new lawn mowers
-    def moveLawnMowers(lawnMowers: List[LawnMower], lawnMowingContext: LawnMowingContext): List[GridPositionalInformation] = lawnMowers match {
+    def moveLawnMowers(lawnMowers: List[LawnMower], lawnMowingContext: LawnMowingContext): List[FinalLawnMower] = lawnMowers match {
         case hd :: tl =>
             val newLawnMower = moveLawnMower(hd.instructions, new MovableLawnMower(lawnMowingContext.gridLimits, hd.gridPositionalInformation))
-            newLawnMower :: moveLawnMowers(tl, lawnMowingContext)
+            createFinalLawnMower(hd.gridPositionalInformation, hd.instructions, newLawnMower) :: moveLawnMowers(tl, lawnMowingContext)
         case _ => List()
     }
 
-    def gridPositionalInformationListToString(lawnMowers: List[GridPositionalInformation]): String = lawnMowers match {
-        case hd :: tl =>
-            hd.position.x.toString + " " + hd.position.y.toString + " " + hd.direction.toString + "\n" + gridPositionalInformationListToString(tl)
-        case _ => ""
+    def createFinalLawnMowersContext(lawnMowers: List[LawnMower], lawnMowingContext: LawnMowingContext): FinalLawnMowingContext = {
+        val finalLawnMowers = moveLawnMowers(lawnMowers, lawnMowingContext)
+        new FinalLawnMowingContext(lawnMowingContext.gridLimits, finalLawnMowers)
     }
 }

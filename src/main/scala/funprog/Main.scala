@@ -38,10 +38,9 @@ object Main extends App {
             println("\n====================\n")
 
             val lawnMowers = new FinalLawnMowersHandler
-            // TODO : Change the following variable name when the moveLawnMowers function will return a LawnMowingContext
-            val movedLawnMowers = lawnMowers.moveLawnMowers(lawnMowingContext.lawnMowers, lawnMowingContext)
+            val createFinalLawnMowersContext = lawnMowers.createFinalLawnMowersContext(lawnMowingContext.lawnMowers, lawnMowingContext)
             println("> Voici le contexte de(s) tondeuse(s) après mouvement(s) :")
-            println(lawnMowers.gridPositionalInformationListToString(movedLawnMowers))
+            println(createFinalLawnMowersContext)
             println("\n====================\n")
 
             val finalLawnMowingContext: FinalLawnMowingContext = new FinalLawnMowingContext(
