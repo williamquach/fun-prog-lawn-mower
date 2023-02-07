@@ -10,80 +10,98 @@ import funprog.models.output.{FileType, FinalLawnMowingContext}
 
 import scala.util.Success
 
-//@SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
 object Main extends App {
-    println("> Début du programme.")
-    println("\n====================\n")
+  println("> Début du programme.")
+  println("\n====================\n")
 
-    private val configuration = new TypeSafeConfiguration(ConfigFactory.load())
+  val configuration = new TypeSafeConfiguration(ConfigFactory.load())
 
-    // File path through config file
-    configuration.getString("application.input-file")
-        .flatMap(inputFilePath => {
-            val fileLoader = new FileLoader()
-            fileLoader.loadFile(inputFilePath)
-        })
-        .flatMap(fileContent => {
-            println(s"> Contenu de votre fichier :\n$fileContent")
-            println("\n====================\n")
+  // File path through config file
+  configuration
+    .getString("application.input-file")
+    .flatMap(inputFilePath => {
+      val fileLoader = new FileLoader()
+      fileLoader.loadFile(inputFilePath)
+    })
+    .flatMap(fileContent => {
+      println(s"> Contenu de votre fichier :\n$fileContent")
+      println("\n====================\n")
 
-            // Parsing text file to LawnMowingContext
-            val lawnMowerAdapter: LawnMowerAdapter = new LawnMowerTxtAdapter()
-            lawnMowerAdapter.parseFileToDomain(fileContent)
-        })
-        .flatMap(lawnMowingContext => {
-            println("> Nous avons réussi à parser le fichier.")
-            println("> Voici le contexte de(s) tondeuse(s) :")
-            println(lawnMowingContext)
-            println("\n====================\n")
+      // Parsing text file to LawnMowingContext
+      val lawnMowerAdapter: LawnMowerAdapter = new LawnMowerTxtAdapter()
+      lawnMowerAdapter.parseFileToDomain(fileContent)
+    })
+    .flatMap(lawnMowingContext => {
+      println("> Nous avons réussi à parser le fichier.")
+      println("> Voici le contexte de(s) tondeuse(s) :")
+      println(lawnMowingContext)
+      println("\n====================\n")
 
-            val lawnMowers = new FinalLawnMowersHandler
-            val createFinalLawnMowersContext = lawnMowers.createFinalLawnMowersContext(lawnMowingContext.lawnMowers, lawnMowingContext)
-            println("> Voici le contexte de(s) tondeuse(s) après mouvement(s) :")
-            println(createFinalLawnMowersContext)
-            println("\n====================\n")
+      val lawnMowers = new FinalLawnMowersHandler
+      val createFinalLawnMowersContext =
+        lawnMowers.createFinalLawnMowersContext(
+            lawnMowingContext.lawnMowers,
+            lawnMowingContext
+        )
+      println("> Voici le contexte de(s) tondeuse(s) après mouvement(s) :")
+      println(createFinalLawnMowersContext)
+      println("\n====================\n")
 
-            val finalLawnMowingContext: FinalLawnMowingContext = new FinalLawnMowingContext(
-                lawnMowingContext,
-                Undefined,
-                "",
-            )
+      val finalLawnMowingContext: FinalLawnMowingContext =
+        new FinalLawnMowingContext(
+            lawnMowingContext,
+            Undefined,
+            ""
+        )
 
-            Success(finalLawnMowingContext)
-        })
-        .flatMap((lawnMowingContext: FinalLawnMowingContext) => {
-            // Ask user for output file type
-            println("> Quel type de de sortie souhaitez-vous pour extraire les informations des tondeuses ?")
-            val userWantOutputFileType = "json" // StdIn.readLine()
-            val outputFileType = FileType.fromString(userWantOutputFileType)
+      Success(finalLawnMowingContext)
+    })
+    .flatMap((lawnMowingContext: FinalLawnMowingContext) => {
+      // Ask user for output file type
+      println(
+          "> Quel type de de sortie souhaitez-vous pour extraire les informations des tondeuses ?"
+      )
+      val userWantOutputFileType = "json" // StdIn.readLine()
+      val outputFileType = FileType.fromString(userWantOutputFileType)
 
-            val finalLawnMowingContextWithFileType = lawnMowingContext.setFileType(outputFileType)
+      val finalLawnMowingContextWithFileType =
+        lawnMowingContext.setFileType(outputFileType)
 
-            configuration.getString(s"application.output-${outputFileType.toString.toLowerCase()}-file").flatMap(
-                outputFilePath => {
-                    println(s"> Vous avez choisi le type de sortie ${outputFileType.toString}.")
-                    println(s"> Le fichier de sortie sera $outputFilePath.")
-                    println("\n====================\n")
-                    Success(finalLawnMowingContextWithFileType.setFilePath(outputFilePath))
-                }
-            )
-        })
-        .flatMap((finalLawnMowingContextWithFilePath: FinalLawnMowingContext) => {
-            //TODO : Call the file writer to write final result
+      configuration
+        .getString(
+            s"application.output-${outputFileType.toString.toLowerCase()}-file"
+        )
+        .flatMap(
+            outputFilePath => {
+              println(
+                  s"> Vous avez choisi le type de sortie ${outputFileType.toString}."
+              )
+              println(s"> Le fichier de sortie sera $outputFilePath.")
+              println("\n====================\n")
+              Success(
+                  finalLawnMowingContextWithFileType
+                    .setFilePath(outputFilePath)
+              )
+            }
+        )
+    })
+    .flatMap((finalLawnMowingContextWithFilePath: FinalLawnMowingContext) => {
+      //TODO : Call the file writer to write final result
 
-            println("> Les informations des tondeuses ont bien été extraites.")
-            println(s"> Chemin du fichier de sortie : ${finalLawnMowingContextWithFilePath.outputFilePath}")
+      println("> Les informations des tondeuses ont bien été extraites.")
+      println(
+          s"> Chemin du fichier de sortie : ${finalLawnMowingContextWithFilePath.outputFilePath}"
+      )
 
-            println("\n====================\n")
-            println("> Fin du programme.")
-            Success("OK")
-        })
-        .failed
-        .foreach(throwable => {
-            println("> Nous n'avons pas réussi à parser le fichier.")
-            println("> Pour la raison suivante : \n- " + throwable.getMessage)
-            println("\n====================\n")
-            println("> Fin du programme.")
-        })
-
+      println("\n====================\n")
+      println("> Fin du programme.")
+      Success("OK")
+    })
+    .failed
+    .foreach(throwable => {
+      println("> Nous n'avons pas réussi à parser le fichier.")
+      println("> Pour la raison suivante : \n- " + throwable.getMessage)
+      println("\n====================\n")
+      println("> Fin du programme.")
+    })
 }

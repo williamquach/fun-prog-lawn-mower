@@ -7,9 +7,9 @@ ThisBuild / organizationName := "example"
 // Scalafmt
 ThisBuild / scalafmtOnCompile := true
 
-fork in run := true
-connectInput in run := true
-mainClass in Compile := Some("progfun.Main")
+run / fork := true
+run / connectInput:= true
+Compile / mainClass := Some("funprog.Main")
 
 lazy val root = (project in file("."))
   .settings(
