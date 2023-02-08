@@ -4,9 +4,14 @@ import com.typesafe.config.ConfigFactory
 import funprog.adapters.{LawnMowerAdapter, LawnMowerTxtAdapter}
 import funprog.config.TypeSafeConfiguration
 import funprog.file_loader.FileLoader
+
+import scala.io.StdIn
+//import funprog.models.lawn_mower.FinalLawnMowingContextWrites
+
 import funprog.models.lawn_mower.movable.FinalLawnMowersHandler
 import funprog.models.output.FileType.Undefined
 import funprog.models.output.{FileType, FinalLawnMowingContext}
+//import play.api.libs.json.Json
 
 import scala.util.Success
 
@@ -43,15 +48,20 @@ object Main extends App {
             lawnMowingContext.lawnMowers,
             lawnMowingContext
         )
-      println("> Voici le contexte de(s) tondeuse(s) après mouvement(s) :")
+
+      println(
+          "> Voici le contexte de(s) tondeuse(s) après mouvement(s) en JSON :"
+      )
+
       println(createFinalLawnMowersContext)
+
       println("\n====================\n")
 
       val finalLawnMowingContext: FinalLawnMowingContext =
         new FinalLawnMowingContext(
-            lawnMowingContext,
+            createFinalLawnMowersContext,
             Undefined,
-            ""
+            "src/main/resources/tmp/output.json"
         )
 
       Success(finalLawnMowingContext)
@@ -61,7 +71,7 @@ object Main extends App {
       println(
           "> Quel type de de sortie souhaitez-vous pour extraire les informations des tondeuses ?"
       )
-      val userWantOutputFileType = "json" // StdIn.readLine()
+      val userWantOutputFileType = StdIn.readLine()
       val outputFileType = FileType.fromString(userWantOutputFileType)
 
       val finalLawnMowingContextWithFileType =
@@ -86,7 +96,8 @@ object Main extends App {
         )
     })
     .flatMap((finalLawnMowingContextWithFilePath: FinalLawnMowingContext) => {
-      //TODO : Call the file writer to write final result
+
+      finalLawnMowingContextWithFilePath.writeFile()
 
       println("> Les informations des tondeuses ont bien été extraites.")
       println(

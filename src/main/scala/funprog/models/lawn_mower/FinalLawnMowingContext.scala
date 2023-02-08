@@ -1,6 +1,8 @@
 package funprog.models.lawn_mower
 
-import funprog.models.lawn_mower.grid.GridLimits
+import funprog.models.lawn_mower.grid.{GridLimits, GridLimitsWrites}
+import play.api.libs.json.{JsObject, Json, Writes}
+//import java.io.{File, FileWriter}
 
 class FinalLawnMowingContext(
     val gridLimits: GridLimits,
@@ -9,5 +11,33 @@ class FinalLawnMowingContext(
   override def toString: String = {
     s"Grid limits :\n${gridLimits.toString}\n" +
     s"Lawn mowers :\n${lawnMowers.map(lawnMower => lawnMower.toString).mkString("\n")}"
+  }
+}
+
+object FinalLawnMowingContextWrites {
+  implicit val finalLawnMowingContextWrites: Writes[FinalLawnMowingContext] =
+    new Writes[FinalLawnMowingContext] {
+      def writes(finalLawnMowingContext: FinalLawnMowingContext): JsObject =
+        Json.obj(
+            "limite" -> Json.toJson(finalLawnMowingContext.gridLimits)(
+                GridLimitsWrites.gridLimitsWrites
+            ),
+            "tondeuses" -> Json.toJson(finalLawnMowingContext.lawnMowers)(
+                FinalLawnMowerWrites.finalLawnMowerListWrites
+            )
+        )
+    }
+
+  def toCSV(finalLawnMowingContext: FinalLawnMowingContext): String = {
+    val lawnMowersCsv = finalLawnMowingContext.lawnMowers
+    //incrementer le niemeRow dans la map
+    .zipWithIndex
+      .map {
+        case (finalLawnMower, index) =>
+          FinalLawnMowerWrites.toCSV(finalLawnMower, (index + 1).toString)
+      }
+      .mkString("")
+
+    s"$lawnMowersCsv"
   }
 }
