@@ -28,8 +28,7 @@ object FinalLawnMowingContextWrites {
     }
 
   def toCSV(finalLawnMowingContext: FinalLawnMowingContext): String = {
-    val lawnMowersCsv = finalLawnMowingContext.lawnMowers
-    .zipWithIndex
+    val lawnMowersCsv = finalLawnMowingContext.lawnMowers.zipWithIndex
       .map {
         case (finalLawnMower, index) =>
           FinalLawnMowerWrites.toCSV(finalLawnMower, (index + 1).toString)
