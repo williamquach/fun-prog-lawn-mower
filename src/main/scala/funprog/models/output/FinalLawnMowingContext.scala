@@ -1,5 +1,6 @@
 package funprog.models.output
 
+import funprog.models.YamlSerializer
 import funprog.models.lawn_mower.FinalLawnMowingContextWrites.toCSV
 import funprog.models.lawn_mower.FinalLawnMowingContextWrites.finalLawnMowingContextWrites
 import play.api.libs.json.Json
@@ -30,7 +31,7 @@ class FinalLawnMowingContext(
     fileType match {
       case FileType.JSON      => writeJSONFile()
       case FileType.CSV       => writeCVSFile()
-      case FileType.YAML      => // TODO : write YAML file
+      case FileType.YAML      => writeYAMLFile()
       case FileType.Undefined =>
     }
   }
@@ -58,5 +59,15 @@ class FinalLawnMowingContext(
     fileWriter.close()
 
     println("JSON file written successfully")
+  }
+
+  def writeYAMLFile(): Unit = {
+    val fileWriter = new FileWriter(
+        new File(outputFilePath)
+    )
+    fileWriter.write(YamlSerializer.serializeFinalLawnMowingContext(finalLawnMowingContext))
+    fileWriter.close()
+
+    println("YAML file written successfully")
   }
 }
