@@ -6,12 +6,10 @@ import funprog.config.TypeSafeConfiguration
 import funprog.file_loader.FileLoader
 
 import scala.io.StdIn
-//import funprog.models.lawn_mower.FinalLawnMowingContextWrites
 
 import funprog.models.lawn_mower.movable.FinalLawnMowersHandler
 import funprog.models.output.FileType.Undefined
 import funprog.models.output.{FileType, FinalLawnMowingContext}
-//import play.api.libs.json.Json
 
 import scala.util.Success
 

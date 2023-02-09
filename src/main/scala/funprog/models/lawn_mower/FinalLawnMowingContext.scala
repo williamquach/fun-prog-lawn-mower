@@ -2,7 +2,6 @@ package funprog.models.lawn_mower
 
 import funprog.models.lawn_mower.grid.{GridLimits, GridLimitsWrites}
 import play.api.libs.json.{JsObject, Json, Writes}
-//import java.io.{File, FileWriter}
 
 class FinalLawnMowingContext(
     val gridLimits: GridLimits,
@@ -30,7 +29,6 @@ object FinalLawnMowingContextWrites {
 
   def toCSV(finalLawnMowingContext: FinalLawnMowingContext): String = {
     val lawnMowersCsv = finalLawnMowingContext.lawnMowers
-    //incrementer le niemeRow dans la map
     .zipWithIndex
       .map {
         case (finalLawnMower, index) =>
